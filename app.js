@@ -9,7 +9,8 @@ const Product = require('./models/product')
 const User = require('./models/users')
 const cart = require('./models/cart')
 const cartitem = require('./models/cart-item')
-
+const Oder = require('./models/orders')
+const OrderItem = require('./models/order-item')
 
 const app = express();
 
@@ -20,6 +21,7 @@ app.set('views', 'views');
 const adminRoutes = require('./routes/admin');
 const shopRoutes = require('./routes/shop');
 const CartItem = require('./models/cart-item');
+const Order = require('./models/orders');
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
@@ -48,6 +50,9 @@ User.hasOne(cart)
 cart.belongsTo(User)
 cart.belongsToMany(Product, {through:cartitem})
 Product.belongsToMany(cart, {through:cartitem})
+Order.belongsTo(User)
+User.hasMany(Order)
+Order.belongsToMany(Product, {through:OrderItem})
 
 // {force:true}
 sequelize.sync()
